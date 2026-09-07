@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: voiceshield-backend
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONPATH
+        value: .
+      - key: APP_NAME
+        value: VoiceShield-AI
+      - key: PORT
+        value: 10000
