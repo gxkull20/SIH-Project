@@ -12,7 +12,11 @@ export default function ExperimentsPage() {
   const [lastResult, setLastResult] = useState<any>(null);
 
   function refresh() {
-    listExperiments().then((res) => setExperiments(res.experiments));
+    listExperiments()
+      .then((res) => {
+        if (res.experiments) setExperiments(res.experiments);
+      })
+      .catch(() => {});
   }
 
   useEffect(() => {

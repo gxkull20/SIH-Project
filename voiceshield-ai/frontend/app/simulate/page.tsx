@@ -8,26 +8,330 @@ import { evaluateSimulateTurn, listSimulateScenarios } from "@/lib/api";
 import { Shield, RotateCcw, Download, CheckCircle, AlertTriangle } from "lucide-react";
 import clsx from "clsx";
 
+const DEFAULT_SIMULATE_SCENARIOS = [
+  {
+    id: "bank_kyc_otp_fraud",
+    title: "Bank KYC & Urgent Card Block Scam",
+    category: "Banking Fraud / Social Engineering",
+    caller_profile: {
+      name: "Rajesh V. (Central Fraud Cell)",
+      claimed_organization: "Demo Bank",
+      claimed_branch: "Delhi",
+      claimed_city: "Delhi",
+      caller_id: "+91-98210-44912",
+      avatar_color: "from-red-500 to-amber-600",
+      voice_synthetic_likelihood: 0.86,
+      voice_type: "synthetic",
+      voice_pitch: 0.9,
+      voice_rate: 1.05,
+    },
+    description: "Caller impersonates bank fraud division claiming an unauthorized transaction of Rs. 48,990 and urgently requests a 6-digit cancellation OTP to steal funds.",
+    turns: [
+      {
+        id: "turn_1",
+        caller_text: "Urgent security alert from Demo Bank Central Security. We detected an unauthorized transaction of Rs. 48,990 on your card ending in 4109 from Singapore. Did you authorize this charge?",
+        options: [
+          {
+            label: "No, I did not authorize this! Cancel it immediately.",
+            user_reply: "No, I did not authorize this! Please cancel it immediately.",
+            next_turn: "turn_2a",
+            compliance_type: "panicked",
+          },
+          {
+            label: "Which branch are you calling from? What is your employee ID?",
+            user_reply: "Which branch are you calling from? What is your employee ID?",
+            next_turn: "turn_2b",
+            compliance_type: "suspicious",
+          },
+          {
+            label: "I will call the customer care number on the back of my card directly.",
+            user_reply: "I will call the customer care number on the back of my card directly.",
+            next_turn: "turn_hangup_safe",
+            compliance_type: "safe",
+          },
+        ],
+      },
+      {
+        id: "turn_2a",
+        caller_text: "Understood sir. The transaction is in pending clearance for 3 minutes only. I have generated a cancellation code to reverse the funds. Please read out the 6-digit OTP you just received right now.",
+        options: [
+          {
+            label: "Okay, the OTP is 849201. Please reverse it fast!",
+            user_reply: "Okay, the OTP is 849201. Please reverse it fast!",
+            next_turn: "turn_compromised",
+            compliance_type: "compromised",
+          },
+          {
+            label: "My bank says never share OTPs with anyone on call.",
+            user_reply: "My bank app says never share OTPs with anyone on call. I am not sharing it.",
+            next_turn: "turn_caller_pressure",
+            compliance_type: "suspicious",
+          },
+          {
+            label: "I am terminating this call and reporting this to 1930 Cyber Cell.",
+            user_reply: "I am terminating this call and reporting this to 1930 Cyber Cell.",
+            next_turn: "turn_hangup_safe",
+            compliance_type: "safe",
+          },
+        ],
+      },
+      {
+        id: "turn_2b",
+        caller_text: "Sir, this is Central Fraud Operations in Delhi, Badge ID EMP-9921! There is no time for questions, the funds are getting permanently debited in 2 minutes! Do you want to lose 48,000 rupees? Share the cancellation OTP immediately!",
+        options: [
+          {
+            label: "Fine, the OTP is 849201! Stop the charge!",
+            user_reply: "Fine, the OTP is 849201! Stop the charge!",
+            next_turn: "turn_compromised",
+            compliance_type: "compromised",
+          },
+          {
+            label: "Your branch info does not match. I am hanging up.",
+            user_reply: "Your branch info does not match the bank directory. I am hanging up.",
+            next_turn: "turn_hangup_safe",
+            compliance_type: "safe",
+          },
+        ],
+      },
+      {
+        id: "turn_caller_pressure",
+        caller_text: "Sir, this is an automated cancellation code, not an OTP! If you refuse to verify it within 60 seconds, Demo Bank is not liable for your 48,000 rupee loss! Give the code now!",
+        options: [
+          {
+            label: "I will never share an OTP. Goodbye.",
+            user_reply: "I will never share an OTP. Goodbye.",
+            next_turn: "turn_hangup_safe",
+            compliance_type: "safe",
+          },
+          {
+            label: "Alright fine, it is 849201.",
+            user_reply: "Alright fine, it is 849201.",
+            next_turn: "turn_compromised",
+            compliance_type: "compromised",
+          },
+        ],
+      },
+      {
+        id: "turn_compromised",
+        caller_text: "Code accepted. Your card is updated. (Call disconnects abruptly — money debited).",
+        options: [],
+        is_terminal: true,
+        outcome: "CRITICAL: Account compromised. Scammer extracted OTP to complete unauthorized transaction.",
+      },
+      {
+        id: "turn_hangup_safe",
+        caller_text: "Wait sir, do not hang up! (Call terminated by user).",
+        options: [],
+        is_terminal: true,
+        outcome: "ATTACK BLOCKED: You successfully defended your credentials and avoided financial loss.",
+      },
+    ],
+  },
+  {
+    id: "customs_police_extortion",
+    title: "Customs Narcotics & Police Arrest Threat",
+    category: "Law Enforcement Impersonation / Extortion",
+    caller_profile: {
+      name: "Inspector Vikramaditya (Crime Branch)",
+      claimed_organization: "Delhi Police Crime Branch",
+      claimed_branch: "IGI Airport Division",
+      claimed_city: "New Delhi",
+      caller_id: "+91-11-2301-8841",
+      avatar_color: "from-blue-600 to-indigo-900",
+      voice_synthetic_likelihood: 0.82,
+      voice_type: "synthetic",
+      voice_pitch: 0.85,
+      voice_rate: 0.95,
+    },
+    description: "Caller impersonates airport customs and cyber police, claiming an intercepted parcel with illegal passports and narcotics under your Aadhaar, demanding urgent settlement.",
+    turns: [
+      {
+        id: "turn_1",
+        caller_text: "This is Inspector Vikramaditya from Crime Branch IGI Airport. Customs has confiscated a DHL parcel sent to Malaysia containing 5 forged passports and 250 grams of narcotics booked under your Aadhaar number. A non-bailable arrest warrant has been issued.",
+        options: [
+          {
+            label: "Sir, I have never sent any parcel! My Aadhaar must have been misused!",
+            user_reply: "Sir, I have never sent any parcel! My Aadhaar must have been misused!",
+            next_turn: "turn_2a",
+            compliance_type: "panicked",
+          },
+          {
+            label: "I will report directly to my local police station to verify this warrant.",
+            user_reply: "I will report directly to my local police station to verify this warrant.",
+            next_turn: "turn_hangup_safe",
+            compliance_type: "safe",
+          },
+        ],
+      },
+      {
+        id: "turn_2a",
+        caller_text: "If you are innocent, we can place you under virtual police custody right now on Skype. To avoid immediate detention at your residence, you must transfer a 50,000 rupee refundable RBI verification bond.",
+        options: [
+          {
+            label: "Police never request money transfers over the phone. Hanging up now.",
+            user_reply: "Police never request money transfers over the phone. Hanging up now.",
+            next_turn: "turn_hangup_safe",
+            compliance_type: "safe",
+          },
+          {
+            label: "Okay, where do I send the verification deposit?",
+            user_reply: "Okay, where do I send the verification deposit?",
+            next_turn: "turn_compromised",
+            compliance_type: "compromised",
+          },
+        ],
+      },
+      {
+        id: "turn_compromised",
+        caller_text: "Send the funds to this UPI handle immediately. (Extortion trap complete).",
+        options: [],
+        is_terminal: true,
+        outcome: "CRITICAL: Extortion scam successful. Cyber-criminals extracted fraudulent bond payment.",
+      },
+      {
+        id: "turn_hangup_safe",
+        caller_text: "You cannot disconnect, you will be arrested! (Call terminated safely).",
+        options: [],
+        is_terminal: true,
+        outcome: "ATTACK BLOCKED: Law enforcement extortion recognized and safely terminated.",
+      },
+    ],
+  },
+  {
+    id: "legitimate_bank_verification",
+    title: "Legitimate Bank Call (Control Case)",
+    category: "Legitimate Business / Customer Care",
+    caller_profile: {
+      name: "Ananya (Customer Relations)",
+      claimed_organization: "Demo Bank",
+      claimed_branch: "Chennai",
+      claimed_city: "Chennai",
+      caller_id: "+91-DEMO-1000",
+      avatar_color: "from-emerald-500 to-teal-700",
+      voice_synthetic_likelihood: 0.08,
+      voice_type: "human",
+      voice_pitch: 1.05,
+      voice_rate: 1.0,
+    },
+    description: "Legitimate call from Demo Bank confirming a requested address update without asking for credentials, OTPs, or passwords.",
+    turns: [
+      {
+        id: "turn_1",
+        caller_text: "Good afternoon. This is Ananya calling from Demo Bank Chennai Branch. We received your request yesterday to update your correspondence address on file. Please note Demo Bank customer care will never ask you for confidential account credentials. Can you confirm if you submitted this request?",
+        options: [
+          {
+            label: "Yes, I submitted that update request yesterday.",
+            user_reply: "Yes, I submitted that update request yesterday.",
+            next_turn: "turn_legit_end",
+            compliance_type: "normal",
+          },
+          {
+            label: "No, I did not request that.",
+            user_reply: "No, I did not request that.",
+            next_turn: "turn_legit_reject",
+            compliance_type: "normal",
+          },
+        ],
+      },
+      {
+        id: "turn_legit_end",
+        caller_text: "Thank you for confirming. Your correspondence address update is confirmed. Have a wonderful day.",
+        options: [],
+        is_terminal: true,
+        outcome: "AUTHENTIC INTERACTION: Legitimate call completed safely. No credentials or money compromised.",
+      },
+      {
+        id: "turn_legit_reject",
+        caller_text: "We have cancelled the address change request immediately to safeguard your account. Thank you for notifying us.",
+        options: [],
+        is_terminal: true,
+        outcome: "UNAUTHORIZED REQUEST BLOCKED: Legitimate bank agent cancelled unauthorized modification.",
+      },
+    ],
+  },
+];
+
+function createFallbackTelemetry(activeScenario: any, currentTurn: any, userReply?: string) {
+  const synthLikelihood = activeScenario?.caller_profile?.voice_synthetic_likelihood ?? 0.85;
+  const isScam = activeScenario?.id !== "legitimate_bank_verification";
+  const callerText = currentTurn?.caller_text?.toLowerCase() || "";
+  const reply = userReply?.toLowerCase() || "";
+
+  let riskLevel = "LOW";
+  let riskScore = 15;
+  let policyAction = "PROCEED_WITH_NORMAL_VERIFICATION";
+
+  if (isScam) {
+    if (callerText.includes("otp") || callerText.includes("warrant") || callerText.includes("bond") || callerText.includes("urgently")) {
+      riskLevel = "CRITICAL";
+      riskScore = 94;
+      policyAction = "TERMINATE_CALL_IMMEDIATELY";
+    } else {
+      riskLevel = "HIGH";
+      riskScore = 78;
+      policyAction = "WARN_USER_SUSPICIOUS";
+    }
+  }
+
+  const isCompromised = reply.includes("849201") || reply.includes("deposit") || reply.includes("fine, the otp");
+  if (isCompromised) {
+    riskScore = 99;
+    riskLevel = "CRITICAL";
+    policyAction = "ACCOUNT_COMPROMISED_ALERT";
+  }
+
+  return {
+    risk: {
+      risk_score: riskScore,
+      risk_level: riskLevel,
+      policy_action: policyAction,
+      primary_threat: isScam ? "Urgent Social Engineering & Credential Harvesting" : "None Detected",
+    },
+    fusion: {
+      synthetic_likelihood: synthLikelihood,
+      human_likelihood: 1 - synthLikelihood,
+      confidence: 0.92,
+    },
+    verification: {
+      org_state: isScam ? "unknown" : "verified",
+      branch_state: isScam ? "inconsistent" : "verified",
+      caller_id_known: !isScam,
+      reason: isScam
+        ? "Branch location is inconsistent with registered headquarters directory."
+        : "Caller profile matches registered institutional customer care line.",
+    },
+    guidance: isScam
+      ? [
+          "Do not share any one-time passcodes or authorization codes.",
+          "Banks and police officers never request financial transfers or bonds over voice calls.",
+          "Hang up and dial the official emergency / customer care line directly.",
+        ]
+      : ["Standard legitimate verification exchange. No credentials requested."],
+  };
+}
+
 export default function SimulatePage() {
-  const [scenarios, setScenarios] = useState<any[]>([]);
+  const [scenarios, setScenarios] = useState<any[]>(DEFAULT_SIMULATE_SCENARIOS);
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>("bank_kyc_otp_fraud");
   const [callStatus, setCallStatus] = useState<"incoming" | "active" | "ended">("incoming");
   const [currentTurnId, setCurrentTurnId] = useState<string>("turn_1");
   const [turnHistory, setTurnHistory] = useState<any[]>([]);
   const [telemetry, setTelemetry] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [responseReports, setResponseReports] = useState<ResponseReportEntry[]>([]);
 
-  // Load scenarios on mount
+  // Load scenarios on mount (prefer backend if live, else keep DEFAULT_SIMULATE_SCENARIOS)
   useEffect(() => {
     listSimulateScenarios()
       .then((res) => {
-        setScenarios(res.scenarios || []);
         if (res.scenarios?.length) {
+          setScenarios(res.scenarios);
           setSelectedScenarioId(res.scenarios[0].id);
         }
       })
-      .finally(() => setLoading(false));
+      .catch(() => {
+        // Fallback to local default scenarios
+      });
   }, []);
 
   const activeScenario = scenarios.find((s) => s.id === selectedScenarioId) || scenarios[0];
@@ -43,7 +347,11 @@ export default function SimulatePage() {
         claimed_city: activeScenario.caller_profile.claimed_city,
         caller_id: activeScenario.caller_profile.caller_id,
         simulated_synthetic_likelihood: activeScenario.caller_profile.voice_synthetic_likelihood,
-      }).then(setTelemetry).catch((err) => console.error("Simulate evaluation error:", err));
+      })
+        .then(setTelemetry)
+        .catch(() => {
+          setTelemetry(createFallbackTelemetry(activeScenario, currentTurn));
+        });
     }
   }, [selectedScenarioId, currentTurnId, activeScenario, currentTurn]);
 
@@ -83,15 +391,20 @@ export default function SimulatePage() {
     ]);
 
     // Live evaluate the exchange
-    const res = await evaluateSimulateTurn({
-      caller_text: currentTurn.caller_text,
-      user_reply: replyText,
-      claimed_organization: activeScenario.caller_profile.claimed_organization,
-      claimed_branch: activeScenario.caller_profile.claimed_branch,
-      claimed_city: activeScenario.caller_profile.claimed_city,
-      caller_id: activeScenario.caller_profile.caller_id,
-      simulated_synthetic_likelihood: activeScenario.caller_profile.voice_synthetic_likelihood,
-    });
+    let res: any;
+    try {
+      res = await evaluateSimulateTurn({
+        caller_text: currentTurn.caller_text,
+        user_reply: replyText,
+        claimed_organization: activeScenario.caller_profile.claimed_organization,
+        claimed_branch: activeScenario.caller_profile.claimed_branch,
+        claimed_city: activeScenario.caller_profile.claimed_city,
+        caller_id: activeScenario.caller_profile.caller_id,
+        simulated_synthetic_likelihood: activeScenario.caller_profile.voice_synthetic_likelihood,
+      });
+    } catch {
+      res = createFallbackTelemetry(activeScenario, currentTurn, replyText);
+    }
     setTelemetry(res);
 
     // Generate per-response report entry
