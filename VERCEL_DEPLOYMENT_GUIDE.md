@@ -48,13 +48,13 @@ Because this repository houses both frontend and backend in subdirectories, **th
 2. Click **"Import"**.
 
 ### Step 3: Set Root Directory (CRITICAL STEP ⚠️)
-1. On the project configuration screen, locate **Root Directory**.
+1. On the project configuration screen (or **Settings > General** on an existing project), locate **Root Directory**.
 2. Click the **"Edit"** button.
 3. Select or type:
    ```
-   voiceshield-ai/frontend
+   frontend
    ```
-4. Click **"Continue"**.
+4. Click **"Save"** (or **"Continue"**).
 
 ### Step 4: Verify Build Settings
 Vercel will automatically detect Next.js:
@@ -92,7 +92,7 @@ To connect the live audio analysis and PyTorch models to your Vercel frontend:
 - **Name**: `voiceshield-backend`
 - **Region**: Nearest to your users (e.g., Singapore, Frankfurt, or Oregon)
 - **Branch**: `main`
-- **Root Directory**: `voiceshield-ai`
+- **Root Directory**: `.` (or leave blank for repository root)
 - **Runtime**: `Python 3` (or `Docker` using `backend/Dockerfile`)
 - **Build Command**:
   ```bash
