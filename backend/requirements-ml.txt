@@ -1,0 +1,6 @@
+-r requirements.txt
+
+# Heavy ML dependencies for local execution with real checkpoints & Docker containers
+torch==2.4.1
+transformers==4.44.2
+faster-whisper==1.0.3

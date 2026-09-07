@@ -15,9 +15,5 @@ scikit-learn==1.5.2
 librosa==0.10.2.post1
 soundfile==0.12.1
 
-# ML — heavy, optional-at-runtime. The app runs in Simulation Mode without
-# these being fully configured with real checkpoints; they're still needed
-# to exercise the "connected" code paths.
-torch==2.4.1
-transformers==4.44.2
-faster-whisper==1.0.3
+# For heavy deep learning models (PyTorch, Transformers, Whisper),
+# see requirements-ml.txt (used in Docker and local full GPU runs).

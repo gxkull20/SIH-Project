@@ -1,8 +1,18 @@
 from __future__ import annotations
 
 import logging
+import os
+import sys
 import time
 import uuid
+from pathlib import Path
+
+# Ensure repo root and backend directory are in sys.path
+_ROOT = Path(__file__).resolve().parent.parent.parent
+_BACKEND = Path(__file__).resolve().parent.parent
+for _p in (str(_ROOT), str(_BACKEND)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
