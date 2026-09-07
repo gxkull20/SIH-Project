@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+*.db
+*.sqlite3
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+.turbo/
+tsconfig.tsbuildinfo
+
+# Env
+.env
+*.env.local
+docker/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Generated Reports
+report_*.pdf
+
+# Audio: ignore general audio files but preserve bundled demo sample presets
+*.wav
+*.mp3
+*.flac
+*.pt
+*.ckpt
+!samples/*.wav
+data/

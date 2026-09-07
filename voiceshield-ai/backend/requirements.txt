@@ -1,0 +1,23 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+pydantic-settings==2.5.2
+sqlalchemy==2.0.35
+psycopg[binary]==3.2.2
+alembic==1.13.2
+python-multipart==0.0.9
+python-json-logger==2.0.7
+reportlab==4.2.2
+boto3==1.35.24
+
+numpy==1.26.4
+scikit-learn==1.5.2
+librosa==0.10.2.post1
+soundfile==0.12.1
+
+# ML — heavy, optional-at-runtime. The app runs in Simulation Mode without
+# these being fully configured with real checkpoints; they're still needed
+# to exercise the "connected" code paths.
+torch==2.4.1
+transformers==4.44.2
+faster-whisper==1.0.3

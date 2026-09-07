@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: voiceshield
+      POSTGRES_PASSWORD: voiceshield
+      POSTGRES_DB: voiceshield
+    ports:
+      - "5432:5432"
+    volumes:
+      - voiceshield_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voiceshield"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: voiceshield
+      MINIO_ROOT_PASSWORD: voiceshield123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - voiceshield_minio_data:/data
+
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://voiceshield:voiceshield@db:5432/voiceshield
+      LOCAL_STORAGE_PATH: /data/audio
+      CORS_ORIGINS: '["http://localhost:3000"]'
+    ports:
+      - "8000:8000"
+    volumes:
+      - voiceshield_audio_data:/data/audio
+      - ../ml:/srv/ml
+      - ../backend:/srv/backend
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "alembic upgrade head &&
+             python -m app.seed &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  voiceshield_db_data:
+  voiceshield_minio_data:
+  voiceshield_audio_data:
