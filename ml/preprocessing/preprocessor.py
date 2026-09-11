@@ -73,27 +73,33 @@ def load_and_preprocess(file_path: str, config: Optional[PreprocessConfig] = Non
     """
     config = config or PreprocessConfig()
     try:
-        import soundfile as sf
         import librosa
     except ImportError as exc:  # pragma: no cover - dependency not installed in this environment
         raise AudioValidationError(
-            "Audio decoding libraries (soundfile/librosa) are not installed on the server."
+            "Audio decoding library (librosa) is not installed on the server."
         ) from exc
 
     try:
-        data, original_sr = sf.read(file_path, always_2d=True)
+        # librosa.load handles WAV, MP3, FLAC and most common formats.
+        # mono=False keeps the original channel layout so we can record it.
+        waveform_raw, original_sr = librosa.load(
+            file_path, sr=None, mono=False, dtype=np.float32
+        )
     except Exception as exc:
-        raise AudioValidationError("Audio could not be processed. The file may be corrupted.") from exc
+        raise AudioValidationError(
+            f"Audio could not be decoded. The file may be corrupted or use an unsupported codec. ({exc})"
+        ) from exc
 
-    if data.size == 0:
-        raise AudioValidationError("The audio file contains no samples.")
-
-    original_channels = data.shape[1]
-
-    if config.force_mono and original_channels > 1:
-        waveform = np.mean(data, axis=1)
+    # Determine channel count and force mono if requested
+    if waveform_raw.ndim == 1:
+        original_channels = 1
+        waveform = waveform_raw
     else:
-        waveform = data[:, 0]
+        original_channels = waveform_raw.shape[0]
+        waveform = np.mean(waveform_raw, axis=0) if config.force_mono else waveform_raw[0]
+
+    if waveform.size == 0:
+        raise AudioValidationError("The audio file contains no samples.")
 
     waveform = waveform.astype(np.float32)
 
