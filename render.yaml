@@ -4,12 +4,24 @@ services:
     runtime: python
     plan: free
     region: oregon
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHONPATH
         value: .
       - key: APP_NAME
         value: VoiceShield-AI
+      - key: ENVIRONMENT
+        value: production
       - key: PORT
         value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: voiceshield-db
+          property: connectionString
+
+databases:
+  - name: voiceshield-db
+    plan: free
+    region: oregon

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -8,7 +10,7 @@ class Settings(BaseSettings):
 
     APP_NAME: str = "VoiceShield-AI"
     ENVIRONMENT: str = "development"
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     DATABASE_URL: str = "sqlite:///./voiceshield.db"
 
@@ -19,7 +21,10 @@ class Settings(BaseSettings):
     S3_ACCESS_KEY: str | None = None
     S3_SECRET_KEY: str | None = None
 
-    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    # Comma-separated list of allowed origins, e.g.:
+    # CORS_ORIGINS=https://voiceshield.vercel.app,https://www.voiceshield.com
+    # Defaults to allow all (*) so the app works out-of-the-box on Render.
+    CORS_ORIGINS: list[str] = ["*"]
 
     MAX_UPLOAD_SIZE_MB: int = 200
     DEFAULT_SEGMENT_LENGTH_S: float = 5.0
@@ -32,6 +37,13 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_MINUTE: int = 60
 
     LOG_LEVEL: str = "INFO"
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def _parse_cors(cls, v: object) -> list[str]:
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v  # type: ignore[return-value]
 
 
 settings = Settings()
