@@ -8,6 +8,8 @@ services:
     buildCommand: pip install -r backend/requirements.txt
     startCommand: bash render_start.sh
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: PYTHONPATH
         value: .
       - key: APP_NAME
