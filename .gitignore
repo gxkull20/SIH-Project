@@ -15,6 +15,8 @@ out/
 npm-debug.log*
 .turbo/
 tsconfig.tsbuildinfo
+bun.lock
+bun.lockb
 
 # Env
 .env
