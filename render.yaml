@@ -4,9 +4,9 @@ services:
     runtime: python
     plan: free
     region: oregon
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Build from repo root so ml/ shared module is accessible alongside backend/
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: bash render_start.sh
     envVars:
       - key: PYTHONPATH
         value: .
