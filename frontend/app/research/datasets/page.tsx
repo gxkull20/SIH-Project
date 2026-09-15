@@ -1,6 +1,6 @@
 export default function DatasetsPage() {
   return (
-    <div className="max-w-3xl space-y-6">
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-6">
       <h1 className="font-mono-vs text-3xl font-bold text-white">Datasets</h1>
 
       <div className="glass-panel p-6">

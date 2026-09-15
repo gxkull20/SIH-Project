@@ -10,132 +10,145 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-surface font-body-md text-on-surface antialiased">
+      <body className="bg-[#05070d] font-sans text-gray-200 antialiased">
         {/* ── Sticky Navigation ── */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-          <div className="h-16 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-[rgba(10,14,24,0.85)] backdrop-blur-xl border-b border-white/[0.06] shadow-[0_1px_12px_rgba(0,0,0,0.3)]">
+          <div className="h-16 max-w-7xl mx-auto px-6 flex items-center justify-between gap-4">
             {/* Logo */}
-            <div className="flex items-center gap-space-md shrink-0">
-              <div className="w-9 h-9 rounded-lg bg-surface-container-low flex items-center justify-center relative">
-                <span className="material-symbols-outlined text-secondary text-[22px]">shield</span>
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary-fixed-dim ring-2 ring-surface-container-lowest animate-pulse"></span>
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center relative">
+                <span className="material-symbols-outlined text-cyan-400 text-[22px]">shield</span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-cyan-400 ring-2 ring-[#0a0e18] animate-pulse"></span>
               </div>
-              <a href="/" className="font-headline-sm text-headline-sm text-on-surface tracking-tight">
-                VoiceShield<span className="text-secondary">-AI</span>
+              <a href="/" className="text-[18px] font-semibold text-white tracking-tight">
+                VoiceShield<span className="text-cyan-400">-AI</span>
               </a>
-              <span className="hidden xl:inline-flex items-center px-space-xs py-0.5 rounded bg-secondary-container/20 text-on-secondary-container font-mono-label text-mono-label uppercase">
+              <span className="hidden xl:inline-flex items-center px-2 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-[11px] font-mono uppercase tracking-wider">
                 Forensic Core v2.4
               </span>
             </div>
 
             {/* Nav Links */}
-            <nav className="hidden lg:flex items-center gap-space-xs">
-              <a href="/simulate" className="px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-body-md text-body-md">
-                Call Simulator
-              </a>
-              <a href="/detect" className="px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-body-md text-body-md">
-                Detect
-              </a>
-              <a href="/verify" className="px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-body-md text-body-md">
-                Verify
-              </a>
-              <a href="/research" className="px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-body-md text-body-md">
-                Research Lab
-              </a>
-              <a href="/about" className="px-space-md py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-body-md text-body-md">
-                About
-              </a>
+            <nav className="hidden lg:flex items-center gap-1">
+              {[
+                { href: "/simulate", label: "Call Simulator" },
+                { href: "/detect",   label: "Detect" },
+                { href: "/verify",   label: "Verify" },
+                { href: "/research", label: "Research Lab" },
+                { href: "/about",    label: "About" },
+              ].map(({ href, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="px-4 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors text-[14px] font-medium"
+                >
+                  {label}
+                </a>
+              ))}
             </nav>
 
             {/* CTA */}
-            <div className="flex items-center gap-space-md shrink-0">
+            <div className="flex items-center gap-3 shrink-0">
               <a
                 href="/detect"
-                className="hidden sm:inline-flex items-center justify-center px-space-lg py-space-xs rounded-lg bg-secondary text-on-secondary hover:bg-secondary-fixed-dim hover:text-on-secondary-fixed transition-all font-headline-sm text-body-md shadow-[0_2px_8px_rgba(0,106,97,0.2)]"
+                className="hidden sm:inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-500 text-[#05070d] hover:bg-cyan-400 transition-all text-[14px] font-semibold shadow-[0_2px_12px_rgba(34,211,238,0.25)]"
               >
-                <span className="material-symbols-outlined text-[18px] mr-space-xs">mic</span>
+                <span className="material-symbols-outlined text-[17px]">mic</span>
                 Analyze a Voice
               </a>
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm">
-                <span className="material-symbols-outlined text-on-primary text-[18px]">person</span>
+              <div className="w-8 h-8 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-slate-300 text-[18px]">person</span>
               </div>
             </div>
           </div>
         </header>
 
-        {/* Page content — pt-16 to clear fixed header */}
-        <main className="w-full pt-16 bg-surface min-h-[calc(100vh-16rem)]">
+        {/* Page content — pt-16 clears fixed header */}
+        <main className="w-full pt-16 min-h-screen">
           {children}
         </main>
 
         {/* ── Footer ── */}
-        <footer className="w-full bg-surface-container-lowest shadow-[0_-1px_8px_rgba(0,0,0,0.03)]">
-          <div className="max-w-[1440px] mx-auto px-margin py-space-xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-xl">
+        <footer className="w-full bg-[#0a0e18] border-t border-white/[0.06]">
+          <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
               {/* Brand */}
-              <div className="lg:col-span-2 flex flex-col gap-space-md">
-                <div className="flex items-center gap-space-sm">
-                  <div className="w-7 h-7 rounded-lg bg-surface-container-low flex items-center justify-center">
-                    <span className="material-symbols-outlined text-secondary text-[18px]">shield</span>
+              <div className="lg:col-span-2 flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-cyan-400 text-[17px]">shield</span>
                   </div>
-                  <span className="font-headline-sm text-headline-sm text-on-surface">
-                    VoiceShield<span className="text-secondary">-AI</span>
+                  <span className="text-[17px] font-semibold text-white">
+                    VoiceShield<span className="text-cyan-400">-AI</span>
                   </span>
                 </div>
-                <p className="font-body-sm text-body-sm text-on-surface-variant max-w-sm">
+                <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
                   Enterprise voice biometrics, deepfake scam mitigation, and millisecond synthetic neural audio classification platform. Engineered for financial networks and real-time telecom defense.
                 </p>
-                <div className="flex flex-wrap items-center gap-space-xs">
-                  <span className="inline-flex items-center gap-1 px-space-sm py-0.5 rounded bg-surface-container-low text-on-surface-variant font-mono-badge text-mono-badge">
-                    <span className="material-symbols-outlined text-[14px] text-secondary">verified_user</span>SOC-2 Type II
-                  </span>
-                  <span className="inline-flex items-center gap-1 px-space-sm py-0.5 rounded bg-surface-container-low text-on-surface-variant font-mono-badge text-mono-badge">
-                    <span className="material-symbols-outlined text-[14px] text-secondary">lock</span>AES-256 GCM
-                  </span>
-                  <span className="inline-flex items-center gap-1 px-space-sm py-0.5 rounded bg-surface-container-low text-on-surface-variant font-mono-badge text-mono-badge">
-                    <span className="material-symbols-outlined text-[14px] text-secondary">gavel</span>ISO 27001
-                  </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  {[
+                    { icon: "verified_user", label: "SOC-2 Type II" },
+                    { icon: "lock",          label: "AES-256 GCM" },
+                    { icon: "gavel",         label: "ISO 27001" },
+                  ].map(({ icon, label }) => (
+                    <span key={label} className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 border border-white/10 text-slate-400 text-[11px] font-mono">
+                      <span className="material-symbols-outlined text-[13px] text-cyan-400">{icon}</span>
+                      {label}
+                    </span>
+                  ))}
                 </div>
               </div>
 
               {/* Detection Engine */}
-              <div className="flex flex-col gap-space-sm">
-                <span className="font-mono-label text-mono-label uppercase text-on-surface-variant">Detection Engine</span>
-                <a href="/detect" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Spectrogram Diagnostic</a>
-                <a href="/detect" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Synthetic Vocal Signatures</a>
-                <a href="/detect" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Cloning Detection</a>
-                <a href="/simulate" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Real-Time Call Gateway</a>
+              <div className="flex flex-col gap-2">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-1">Detection Engine</span>
+                {[
+                  { href: "/detect",   label: "Spectrogram Diagnostic" },
+                  { href: "/detect",   label: "Synthetic Vocal Signatures" },
+                  { href: "/detect",   label: "Cloning Detection" },
+                  { href: "/simulate", label: "Real-Time Call Gateway" },
+                ].map(({ href, label }) => (
+                  <a key={label} href={href} className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">{label}</a>
+                ))}
               </div>
 
               {/* Research */}
-              <div className="flex flex-col gap-space-sm">
-                <span className="font-mono-label text-mono-label uppercase text-on-surface-variant">Research Lab</span>
-                <a href="/research" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Datasets</a>
-                <a href="/research/models" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Model Benchmarks</a>
-                <a href="/research/experiments" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Experiments</a>
-                <a href="/about" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Whitepaper</a>
+              <div className="flex flex-col gap-2">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-1">Research Lab</span>
+                {[
+                  { href: "/research",              label: "Datasets" },
+                  { href: "/research/models",       label: "Model Benchmarks" },
+                  { href: "/research/experiments",  label: "Experiments" },
+                  { href: "/about",                 label: "Whitepaper" },
+                ].map(({ href, label }) => (
+                  <a key={label} href={href} className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">{label}</a>
+                ))}
               </div>
 
               {/* Compliance */}
-              <div className="flex flex-col gap-space-sm">
-                <span className="font-mono-label text-mono-label uppercase text-on-surface-variant">Compliance &amp; Trust</span>
-                <a href="/about" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Biometric Privacy Policy</a>
-                <a href="/about" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Regulatory Whitepapers</a>
-                <a href="/about" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Model Explainability</a>
-                <a href="/about" className="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors">Security Vulnerability Report</a>
+              <div className="flex flex-col gap-2">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mb-1">Compliance &amp; Trust</span>
+                {[
+                  { href: "/about", label: "Biometric Privacy Policy" },
+                  { href: "/about", label: "Regulatory Whitepapers" },
+                  { href: "/about", label: "Model Explainability" },
+                  { href: "/about", label: "Security Vulnerability Report" },
+                ].map(({ href, label }) => (
+                  <a key={label} href={href} className="text-sm text-slate-400 hover:text-cyan-400 transition-colors">{label}</a>
+                ))}
               </div>
             </div>
 
-            <div className="mt-space-xl pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md font-mono-label text-mono-label text-on-surface-variant border-t border-outline-variant">
+            <div className="mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/[0.06] text-[11px] font-mono text-slate-500">
               <p>© 2025 VoiceShield-AI. Explainable voice-security platform. All rights reserved.</p>
-              <div className="flex items-center gap-space-md">
-                <span className="inline-flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+              <div className="flex items-center gap-4">
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
                   Core Neural Grid 99.998% Uptime
                 </span>
-                <span className="text-outline-variant">|</span>
-                <a href="/about" className="hover:text-secondary transition-colors">Terms</a>
-                <a href="/about" className="hover:text-secondary transition-colors">Security</a>
+                <span className="text-white/20">|</span>
+                <a href="/about" className="hover:text-cyan-400 transition-colors">Terms</a>
+                <a href="/about" className="hover:text-cyan-400 transition-colors">Security</a>
               </div>
             </div>
           </div>

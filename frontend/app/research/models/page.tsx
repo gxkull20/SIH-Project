@@ -71,7 +71,7 @@ export default function ModelsPage() {
   }, []);
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
       <div>
         <h1 className="font-mono-vs text-3xl font-bold text-white">Model Management</h1>
         <p className="mt-1 text-slate-400">Status, architecture, and training transparency for every model.</p>
@@ -114,7 +114,7 @@ export default function ModelsPage() {
         </table>
       </div>
 
-      <div className="space-y-4">
+      <div className="max-w-7xl mx-auto px-6 py-10 space-y-6">
         {models.map((m) => (
           <div key={m.model_key} className="glass-panel p-6">
             <button

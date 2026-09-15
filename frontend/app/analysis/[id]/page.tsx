@@ -44,7 +44,7 @@ export default function AnalysisPage({ params }: { params: { id: string } }) {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-mono-vs text-2xl font-bold text-white">Analysis Result</h1>

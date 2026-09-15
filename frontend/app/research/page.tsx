@@ -8,7 +8,7 @@ const TABS = [
 
 export default function ResearchLabPage() {
   return (
-    <div className="space-y-8">
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
       <div>
         <h1 className="font-mono-vs text-3xl font-bold text-white">VoiceShield Research Lab</h1>
         <p className="mt-1 text-slate-400">

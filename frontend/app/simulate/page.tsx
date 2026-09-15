@@ -434,7 +434,7 @@ export default function SimulatePage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
       {/* Page Header */}
       <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 font-mono-vs text-xs text-cyan-300">

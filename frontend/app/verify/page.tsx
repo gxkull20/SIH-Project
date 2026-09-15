@@ -620,7 +620,7 @@ export default function VerifyPage() {
   }
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="max-w-7xl mx-auto px-6 py-10 space-y-8 pb-16">
       {/* ─── Header & Compliance Badge ───────────────────────────────────── */}
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
