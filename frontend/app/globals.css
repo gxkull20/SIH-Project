@@ -2,8 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+/* Google Fonts - Stitch design system */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap");
 
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    overscroll-behavior: none;
+  }
+  main > :first-child { margin-top: 0 !important; }
+  main > :last-child { margin-bottom: 0 !important; }
+}
+
+/* Material Symbols icon font */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Legacy VoiceShield dark mode styles (kept for inner pages) ─── */
 :root {
   --vs-navy-950: #05070d;
   --vs-navy-900: #0a0e18;
@@ -11,13 +42,6 @@
   --vs-amber: #f59e0b;
   --vs-critical: #ef4444;
   --vs-safe: #22c55e;
-}
-
-html,
-body {
-  background-color: var(--vs-navy-950);
-  color: #e5e7eb;
-  font-family: "Inter", system-ui, sans-serif;
 }
 
 .font-mono-vs {
@@ -72,6 +96,7 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+  display: none;
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(148, 163, 184, 0.25);
