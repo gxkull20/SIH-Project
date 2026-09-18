@@ -15,7 +15,7 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10 space-y-12">
+    <div className="space-y-12">
       <section className="max-w-3xl">
         <h1 className="font-mono-vs text-3xl font-bold text-white">About VoiceShield-AI</h1>
         <p className="mt-4 text-slate-300">

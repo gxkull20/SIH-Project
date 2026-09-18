@@ -46,7 +46,7 @@ export default function ExperimentsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
+    <div className="space-y-8">
       <div>
         <h1 className="font-mono-vs text-3xl font-bold text-white">ASVspoof Experiments</h1>
         <p className="mt-1 text-slate-400">
